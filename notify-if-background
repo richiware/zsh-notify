@@ -50,7 +50,7 @@
     # Get the active TMUX pane ID, comparable with $TMUX_PANE
     function find-tmux-pane {
         if is-inside-tmux; then
-            tmux list-windows -F '#{window_active} #{pane_id}' | grep -i '^1' | awk '{ print $2 }'
+            tmux list-sessions -F '#{session_attached} #{pane_id}' | grep -i '^1' | awk '{ print $2 }'
         else
             return 1
         fi
@@ -187,6 +187,8 @@
 
         function notifier-linux {
             notify-send -i "$icon" "$notification_title" "$message"
+            echo -ne '\a'
+            tmux display-message "$notification_title - $message"
 
             function play-sound {
               if which paplay > /dev/null 2>&1; then
