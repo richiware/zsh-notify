@@ -20,7 +20,7 @@ function current-tty {
 function is-current-tmux-pane-active {
     is-inside-tmux || return 1
 
-    local active_pane_id=$(tmux list-windows -F '#{window_active} #{pane_id}' | grep -i '^1' | awk '{ print $2 }')
+    local active_pane_id=$(tmux list-sessions -F '#{session_attached} #{pane_id}' | grep -i '^1' | awk '{ print $2 }')
 
     if [[ "$TMUX_PANE" == "$active_pane_id" ]]; then
         return 0
@@ -37,7 +37,7 @@ function notification-title {
     type="$1"
     shift
 
-    zstyle -s ':notify:' "$type"-title title 
+    zstyle -s ':notify:' "$type"-title title
 
     while [[ $# -gt 0 ]]; do
       k="$1"

@@ -64,6 +64,11 @@ function zsh-notify() {
 
     notify-send ${=icon_option} "$title" "$message"
 
+    if [[ $TMUX_PANE ]]; then
+        echo -ne '\a'
+        tmux display-message "$title - $message"
+    fi
+
     function play-sound {
         if command -v paplay > /dev/null 2>&1; then
             paplay "$1"
