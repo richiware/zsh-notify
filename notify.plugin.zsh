@@ -1,8 +1,9 @@
 # vim: set nowrap filetype=zsh:
-# 
+#
 # See README.md.
 #
 fpath=($fpath $(dirname $0:A))
+command_already_with_notification=("colcon")
 
 zstyle ':notify:*' resources-dir $(dirname $0:A)/resources
 zstyle ':notify:*' window-pid $WINDOWID
@@ -35,6 +36,13 @@ function notify-success() {
 
 # Notify about the last command's success or failure.
 function notify-command-complete() {
+    # Check if command already has notification itself.
+    for cmd in $command_already_with_notification; do
+        if [[ $last_command == ($cmd)* ]]; then
+            return
+        fi
+    done
+
     last_status=$?
 
     local now time_elapsed
