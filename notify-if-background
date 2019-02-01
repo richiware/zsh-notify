@@ -87,13 +87,14 @@
                 fi
             ;;
             "xdotool")
-                local active_wid wid
+                local active_window active_wid wid
 
-                active_wid=$(xdotool getactivewindow)
+                active_window=$(xdotool getactivewindow)
+                active_wid=$(xdotool getwindowpid ${active_window})
 
                 zstyle -s ':notify:' window-pid wid \
                     || zstyle -s ':notify:' parent-pid wid
-  
+
                 if [[ "$active_wid" == "$wid" ]]; then
                     return 0
                 fi
