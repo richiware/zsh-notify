@@ -87,15 +87,23 @@
                 fi
             ;;
             "xdotool")
-                local active_window active_wid wid
+                # Not working with wayland. Trying an not perfect alternative.
+                #local active_window active_wid wid
 
-                active_window=$(xdotool getactivewindow)
-                active_wid=$(xdotool getwindowpid ${active_window})
+                #active_window=$(xdotool getactivewindow)
+                #active_wid=$(xdotool getwindowpid ${active_window})
 
-                zstyle -s ':notify:' window-pid wid \
-                    || zstyle -s ':notify:' parent-pid wid
+                #zstyle -s ':notify:' window-pid wid \
+                #    || zstyle -s ':notify:' parent-pid wid
 
-                if [[ "$active_wid" == "$wid" ]]; then
+                #if [[ "$active_wid" == "$wid" ]]; then
+                #    return 0
+                #fi
+
+                local window_title
+                window_title=$(gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "global.display.focus_window.get_title()" | awk -F\" '{c[$2]++} END{for (w in c) print w}')
+
+                if [[ "$window_title" == "tmux" ]]; then
                     return 0
                 fi
             ;;
