@@ -6,7 +6,7 @@ if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]; then
     source "$plugin_dir"/applescript/functions
 elif [[ "$TERM_PROGRAM" == 'Apple_Terminal' ]]; then
     source "$plugin_dir"/applescript/functions
-elif [[ "$DISPLAY" != '' ]] && command -v xdotool > /dev/null 2>&1 &&  command -v wmctrl > /dev/null 2>&1; then
+elif [[ "$DISPLAY" != '' ]] && command -v xdotool > /dev/null 2>&1 && (! zstyle -t ':notify:' activate-terminal || command -v wmctrl > /dev/null 2>&1 ); then
     source "$plugin_dir"/xdotool/functions
 else
     echo "zsh-notify: unsupported environment" >&1
@@ -96,7 +96,7 @@ function zsh-notify-after-command() {
 
     local error_log notifier now time_elapsed
 
-    zstyle -s ':notify:' error-log error_log 
+    zstyle -s ':notify:' error-log error_log
     zstyle -s ':notify:' notifier notifier
 
     touch "$error_log"
